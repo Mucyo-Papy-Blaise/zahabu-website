@@ -16,10 +16,10 @@ export default function WhatWeBelieve() {
         {/* Decorative circle top */}
         <div className="w-4 h-4 rounded-full border-2 border-gray-300 mb-8" />
 
-        <h2 className="text-primary text-5xl font-bold leading-tight text-nowrap">
+        <h2 className="text-primary text-5xl font-bold leading-tight">
           What We Believe
         </h2>
-        <span className="block w-96 h-0.5 bg-accent mt-3 rounded-full mb-10" />
+        <span className="block w-48 h-0.5 bg-accent mt-3 rounded-full mb-10" />
          
         {/* Values grid — staggered like the image */}
         <div className="flex flex-col gap-3 mb-10">
