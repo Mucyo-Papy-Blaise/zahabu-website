@@ -1,0 +1,89 @@
+@import "tailwindcss";
+
+/* ─── Chillax Font Face ───────────────────────────────────── */
+@font-face {
+  font-family: "Chillax";
+  src: url("/fonts/WEB/fonts/Chillax-Extralight.woff2") format("woff2");
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Chillax";
+  src: url("/fonts/WEB/fonts/Chillax-Light.woff2") format("woff2");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Chillax";
+  src: url("/fonts/WEB/fonts/Chillax-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Chillax";
+  src: url("/fonts/WEB/fonts/Chillax-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Chillax";
+  src: url("/fonts/WEB/fonts/Chillax-Semibold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Chillax";
+  src: url("/fonts/WEB/fonts/Chillax-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ─── Variables ───────────────────────────────────────────── */
+:root {
+  --color-primary: #19144b;
+  --color-accent: #fabe0a;
+  --color-bg: #F7F7F7;
+  --color-text: #19144b;
+  --color-muted: #6b7280;
+  --section-px: 10rem;
+  --background: var(--color-bg);
+  --foreground: var(--color-text);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--color-primary);
+  --color-accent: var(--color-accent);
+  --color-muted: var(--color-muted);
+}
+
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+.section-padding {
+  padding-left: var(--section-px);
+  padding-right: var(--section-px);
+}
+
+@media (max-width: 1024px) {
+  :root { --section-px: 2.5rem; }
+}
+
+@media (max-width: 640px) {
+  :root { --section-px: 1.25rem; }
+}

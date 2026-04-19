@@ -1,0 +1,18 @@
+.partners-track {
+  display: flex;
+  width: max-content;
+  animation: scroll-partners 40s linear infinite;
+}
+
+.partners-track:hover {
+  animation-play-state: paused;
+}
+
+@keyframes scroll-partners {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
