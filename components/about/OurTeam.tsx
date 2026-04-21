@@ -88,6 +88,9 @@ export default function OurTeam() {
               {member.role}
             </p>
             <div className="w-8 h-0.5 bg-accent rounded-full mb-4" />
+            {/* <p className="text-muted text-sm leading-relaxed text-center">
+              {member.bio}
+            </p> */}
           </div>
         ))}
       </div>
@@ -120,6 +123,9 @@ export default function OurTeam() {
               {member.role}
             </p>
             <div className="w-8 h-0.5 bg-accent rounded-full mb-4" />
+            <p className="text-muted text-sm leading-relaxed text-center">
+              {/* {member.bio} */}
+            </p>
           </div>
         ))}
       </div>
