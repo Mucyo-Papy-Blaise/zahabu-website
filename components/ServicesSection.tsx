@@ -1,3 +1,5 @@
+import { SectionTransition, SectorPill, Tilt3D } from "@/components/motion";
+
 const services = [
   {
     number: "01",
@@ -91,7 +93,11 @@ const sectors = [
 
 export default function ServicesSection() {
   return (
-    <section id="services" className="bg-[#F7F7F7] section-padding py-24">
+    <SectionTransition
+      id="services"
+      slide="left"
+      className="bg-[#F7F7F7] section-padding py-24"
+    >
       {/* Header */}
       <div className="text-center mb-16">
         <p className="text-accent text-xs font-black tracking-[0.4em] uppercase mb-3">
@@ -108,8 +114,9 @@ export default function ServicesSection() {
       {/* Services Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-20">
         {services.map((service, i) => (
-          <div
+          <Tilt3D
             key={i}
+            tiltAmount={7}
             className={`relative rounded-xl p-7 overflow-hidden flex flex-col gap-4 ${
               service.accent
                 ? "bg-accent"
@@ -143,7 +150,7 @@ export default function ServicesSection() {
                 service.accent ? "bg-primary" : "bg-accent"
               }`}
             />
-          </div>
+          </Tilt3D>
         ))}
       </div>
 
@@ -161,8 +168,9 @@ export default function ServicesSection() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {classes.map((cls, i) => (
-            <div
+            <Tilt3D
               key={i}
+              tiltAmount={5}
               className="bg-white rounded-xl border border-gray-100 shadow-sm p-7"
             >
               <h4 className="text-primary font-bold text-sm uppercase tracking-widest mb-5 flex items-center gap-2">
@@ -177,7 +185,7 @@ export default function ServicesSection() {
                   </li>
                 ))}
               </ul>
-            </div>
+            </Tilt3D>
           ))}
         </div>
       </div>
@@ -193,17 +201,17 @@ export default function ServicesSection() {
           </h3>
           <div className="w-10 h-1 bg-accent rounded-full mx-auto" />
         </div>
-        <div className="flex flex-wrap gap-3 justify-center">
+        <div className="flex flex-wrap gap-3 justify-center [perspective:900px]">
           {sectors.map((sector, i) => (
-            <span
+            <SectorPill
               key={i}
-              className="bg-white border border-gray-200 text-primary text-xs font-bold px-5 py-2.5 rounded-sm tracking-widest uppercase shadow-sm"
+              className="bg-white border border-gray-200 text-primary text-xs font-bold px-5 py-2.5 rounded-sm tracking-widest uppercase shadow-sm inline-block"
             >
               {sector}
-            </span>
+            </SectorPill>
           ))}
         </div>
       </div>
-    </section>
+    </SectionTransition>
   );
 }

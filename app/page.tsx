@@ -1,21 +1,17 @@
-import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import ServicesSection from "@/components/ServicesSection";
 import WhyChooseUs from "@/components/WhyChooseUs";
 import PartnersStrip from "@/components/PartnersStrip";
 import WhatWeBelieve from "@/components/WhatWeBelieve";
-import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
-    <main>
-      <Navbar />
+    <main className="flex w-full min-h-0 flex-1 flex-col">
       <HeroSection />
       <PartnersStrip />
-      <ServicesSection/>
+      <ServicesSection />
       <WhyChooseUs />
       <WhatWeBelieve />
-      <Footer />
     </main>
   );
 }

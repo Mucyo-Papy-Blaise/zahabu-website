@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { SectionTransition, Tilt3D } from "@/components/motion";
 
 const coreValues = [
   { label: "Integrity", accent: false },
@@ -39,8 +40,10 @@ const beliefs = [
 export default function MissionVision() {
   return (
     <>
-      {/* Mission, Vision & Values */}
-      <section className="bg-[#F7F7F7] w-full min-h-150 flex flex-col lg:flex-row overflow-hidden">
+      <SectionTransition
+        slide="right"
+        className="bg-[#F7F7F7] w-full min-h-150 flex flex-col lg:flex-row overflow-hidden"
+      >
         {/* Left — Image */}
         <div className="relative lg:w-[48%] min-h-100 lg:min-h-full bg-[#F7F7F7] p-8 lg:p-12">
           <div
@@ -119,10 +122,9 @@ export default function MissionVision() {
             </div>
           </div>
         </div>
-      </section>
+      </SectionTransition>
 
-      {/* What We Believe */}
-      <section className="bg-white section-padding py-24">
+      <SectionTransition slide="up" className="bg-white section-padding py-24">
         <div className="text-center mb-14">
           <p className="text-accent text-xs font-black tracking-[0.4em] uppercase mb-3">
             What We Believe
@@ -137,9 +139,10 @@ export default function MissionVision() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {beliefs.map((belief, i) => (
-            <div
+            <Tilt3D
               key={i}
-              className="bg-[#F7F7F7] rounded-xl border border-gray-100 p-7 flex flex-col gap-3 hover:shadow-md hover:-translate-y-1 transition-all duration-300"
+              tiltAmount={6}
+              className="bg-[#F7F7F7] rounded-xl border border-gray-100 p-7 flex flex-col gap-3"
             >
               <h3 className="text-primary font-bold text-sm uppercase tracking-widest flex items-center gap-2">
                 <span className="w-1 h-5 bg-accent rounded-full inline-block" />
@@ -148,10 +151,10 @@ export default function MissionVision() {
               <p className="text-muted text-sm leading-relaxed pl-4">
                 {belief.description}
               </p>
-            </div>
+            </Tilt3D>
           ))}
         </div>
-      </section>
+      </SectionTransition>
     </>
   );
 }

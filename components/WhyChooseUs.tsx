@@ -1,3 +1,8 @@
+"use client";
+
+import { motion, useReducedMotion } from "framer-motion";
+import { BTN_HOVER, BTN_TAP, SectionTransition, SPRING_HOVER, Tilt3D } from "@/components/motion";
+
 const reasons = [
   {
     number: "01",
@@ -23,8 +28,10 @@ const reasons = [
 ];
 
 export default function WhyChooseUs() {
+  const reduce = useReducedMotion();
+
   return (
-    <section id="why-us" className="bg-white section-padding py-24">
+    <SectionTransition id="why-us" slide="right" className="bg-white section-padding py-24">
       <div className="text-center mb-16">
         <p className="text-accent text-xs font-black tracking-[0.4em] uppercase mb-3">
           Why ZAHABU
@@ -32,19 +39,18 @@ export default function WhyChooseUs() {
         <h2 className="text-primary text-4xl font-bold mb-3">Why Choose Us</h2>
         <div className="w-10 h-1 bg-accent rounded-full mx-auto mb-5" />
         <p className="text-muted text-sm max-w-lg mx-auto leading-relaxed">
-          Dedicated to delivering professional, structured, and client-centered
-          insurance solutions across Rwanda.
+          Dedicated to delivering professional, structured, and client-centered insurance
+          solutions across Rwanda.
         </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {reasons.map((reason, i) => (
-          <div
+          <Tilt3D
             key={i}
-            className={`relative rounded-xl p-7 overflow-hidden flex flex-col gap-4 group hover:-translate-y-1 transition-transform duration-300 ${
-              reason.accent
-                ? "bg-accent"
-                : "bg-[#F7F7F7] border border-gray-100"
+            tiltAmount={6}
+            className={`relative rounded-xl p-7 overflow-hidden flex flex-col gap-4 group transition-shadow duration-300 ${
+              reason.accent ? "bg-accent" : "bg-[#F7F7F7] border border-gray-100"
             }`}
           >
             <span
@@ -73,32 +79,45 @@ export default function WhyChooseUs() {
                 reason.accent ? "bg-primary" : "bg-accent"
               }`}
             />
-          </div>
+          </Tilt3D>
         ))}
       </div>
 
-      {/* Service Commitment Banner */}
-      <div className="mt-16 bg-primary rounded-xl p-10 flex flex-col md:flex-row items-center justify-between gap-8">
+      <motion.div
+        className="mt-16 flex flex-col items-center justify-between gap-8 rounded-xl bg-primary p-10 md:flex-row"
+        whileHover={reduce ? undefined : { y: -2, boxShadow: "0 20px 48px -18px rgba(0,0,0,0.28)" }}
+        transition={SPRING_HOVER}
+      >
         <div>
           <p className="text-accent text-xs font-black tracking-[0.4em] uppercase mb-3">
             Our Commitment
           </p>
-          <h3 className="text-white text-2xl font-bold mb-2">
-            Committed to Your Protection
-          </h3>
+          <h3 className="text-white text-2xl font-bold mb-2">Committed to Your Protection</h3>
           <p className="text-white/60 text-sm leading-relaxed max-w-md">
-            Professional and structured insurance solutions, clear communication,
-            direct engagement with insurers, and continuous support throughout
-            the insurance lifecycle.
+            Professional and structured insurance solutions, clear communication, direct
+            engagement with insurers, and continuous support throughout the insurance
+            lifecycle.
           </p>
         </div>
-        <a
-          href="#contact"
-          className="flex-shrink-0 bg-accent text-primary font-bold px-8 py-3 rounded-sm uppercase tracking-widest text-sm hover:opacity-90 transition-opacity duration-200"
-        >
-          Get In Touch
-        </a>
-      </div>
-    </section>
+        {reduce ? (
+          <a
+            href="#contact"
+            className="flex-shrink-0 bg-accent text-primary font-bold px-8 py-3 rounded-sm uppercase tracking-widest text-sm hover:opacity-90 transition-opacity duration-200"
+          >
+            Get In Touch
+          </a>
+        ) : (
+          <motion.a
+            href="#contact"
+            className="flex-shrink-0 bg-accent text-primary font-bold px-8 py-3 rounded-sm uppercase tracking-widest text-sm"
+            whileHover={BTN_HOVER}
+            whileTap={BTN_TAP}
+            transition={SPRING_HOVER}
+          >
+            Get In Touch
+          </motion.a>
+        )}
+      </motion.div>
+    </SectionTransition>
   );
 }

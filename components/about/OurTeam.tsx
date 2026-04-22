@@ -1,3 +1,5 @@
+import { SectionTransition, Tilt3D } from "@/components/motion";
+
 const team = [
   {
     name: "Gahima Pierre",
@@ -27,7 +29,7 @@ const team = [
 
 export default function OurTeam() {
   return (
-    <section className="bg-background section-padding py-24">
+    <SectionTransition slide="up" className="bg-background section-padding py-24">
       <div className="text-center mb-16">
         <p className="text-accent text-xs font-black tracking-[0.4em] uppercase mb-3">
           The People Behind ZAHABU
@@ -42,9 +44,10 @@ export default function OurTeam() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {team.map((member, i) => (
-          <div
+          <Tilt3D
             key={i}
-            className="group bg-[#F7F7F7] rounded-xl overflow-hidden border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+            tiltAmount={5}
+            className="group bg-[#F7F7F7] rounded-xl overflow-hidden border border-gray-100 hover:shadow-xl transition-shadow duration-300"
           >
             <div className="p-7">
               {/* Avatar + name row */}
@@ -70,9 +73,9 @@ export default function OurTeam() {
                 <p className="text-muted text-sm leading-relaxed">{member.bio}</p>
               </div>
             </div>
-          </div>
+          </Tilt3D>
         ))}
       </div>
-    </section>
+    </SectionTransition>
   );
 }

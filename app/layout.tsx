@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import Footer from "@/components/Footer";
+import Navbar from "@/components/Navbar";
+import { PageTransition } from "@/components/motion";
 
 export const metadata: Metadata = {
   title: "ZAHABU | Solutions Ltd",
@@ -14,10 +17,12 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full antialiased">
       <body
-        className="min-h-full flex flex-col"
+        className="relative min-h-full flex flex-col"
         style={{ fontFamily: "'Chillax', sans-serif" }}
       >
-        {children}
+        <Navbar />
+        <PageTransition>{children}</PageTransition>
+        <Footer />
       </body>
     </html>
   );
