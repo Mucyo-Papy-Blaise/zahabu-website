@@ -15,9 +15,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full antialiased">
+    <html lang="en" className="h-full min-w-0 max-w-full overflow-x-clip antialiased">
       <body
-        className="relative min-h-full flex flex-col"
+        className="relative flex min-h-full min-w-0 max-w-full flex-col overflow-x-clip"
         style={{ fontFamily: "'Chillax', sans-serif" }}
       >
         <Navbar />

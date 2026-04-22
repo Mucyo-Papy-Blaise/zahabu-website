@@ -59,6 +59,12 @@
   --section-px: 10rem;
   --background: var(--color-bg);
   --foreground: var(--color-text);
+
+  /* Custom scrollbar (used with scrollbar-width / ::-webkit-scrollbar) */
+  --scrollbar-width: 10px;
+  --scrollbar-track: #12102a;
+  --scrollbar-thumb: #e5b82a;
+  --scrollbar-thumb-hover: var(--color-accent);
 }
 
 @theme inline {
@@ -70,9 +76,56 @@
 }
 
 
+/* No horizontal page scroll; 3D transforms / wide rows must not bleed past the viewport. */
+html {
+  overflow-x: clip;
+  max-width: 100%;
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
+  overflow-x: clip;
+  max-width: 100%;
+  min-width: 0;
+}
+
+/* WebKit (Chrome, Edge, Safari): modern pill thumb on document scroller */
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  width: var(--scrollbar-width);
+  height: var(--scrollbar-width);
+}
+
+html::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+  border-radius: 9999px;
+}
+
+html::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    180deg,
+    var(--scrollbar-thumb) 0%,
+    color-mix(in srgb, var(--color-primary) 35%, var(--scrollbar-thumb) 65%) 100%
+  );
+  border-radius: 9999px;
+  border: 2px solid var(--scrollbar-track);
+  background-clip: padding-box;
+}
+
+html::-webkit-scrollbar-thumb:hover,
+body::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+  border-color: var(--scrollbar-track);
+}
+
+html::-webkit-scrollbar-thumb:active,
+body::-webkit-scrollbar-thumb:active {
+  background: color-mix(in srgb, var(--scrollbar-thumb-hover) 85%, #000 15%);
 }
 
 .section-padding {

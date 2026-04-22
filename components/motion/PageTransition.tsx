@@ -13,18 +13,22 @@ export function PageTransition({ children }: PageTransitionProps) {
   const reduceMotion = useReducedMotion();
 
   if (reduceMotion) {
-    return <div className="flex min-h-0 min-w-0 flex-1 flex-col">{children}</div>;
+    return (
+      <div className="flex min-h-0 min-w-0 max-w-full flex-1 flex-col overflow-x-clip">
+        {children}
+      </div>
+    );
   }
 
   return (
     <div
-      className="min-h-0 min-w-0 flex-1 [perspective:var(--p)]"
+      className="min-h-0 min-w-0 max-w-full flex-1 overflow-x-clip [perspective:var(--p)]"
       style={{ ["--p" as string]: `${PERSPECTIVE_PX}px` }}
     >
       <AnimatePresence mode="wait">
         <motion.div
           key={pathname}
-          className="flex min-h-0 min-w-0 flex-1 flex-col"
+          className="flex min-h-0 min-w-0 max-w-full flex-1 flex-col overflow-x-clip"
           style={{ transformStyle: "preserve-3d" }}
           initial={{ opacity: 0, y: 28, rotateX: 7, z: -48 }}
           animate={{ opacity: 1, y: 0, rotateX: 0, z: 0 }}

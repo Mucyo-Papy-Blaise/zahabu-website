@@ -56,7 +56,7 @@ export default function Navbar() {
   const closeMenu = () => setMenuOpen(false);
 
   return (
-    <div className="absolute top-0 left-0 w-full z-50 section-padding pt-3 sm:pt-4 [perspective:1200px]">
+    <div className="absolute top-0 left-0 z-50 w-full min-w-0 max-w-full overflow-x-clip section-padding pt-3 sm:pt-4 [perspective:1200px]">
       <motion.nav
         className="relative w-full rounded-2xl md:rounded-full bg-primary/80 backdrop-blur-sm px-4 py-3 sm:px-6 md:px-8 md:py-4 border border-white/5 shadow-lg"
         style={{ transformStyle: "preserve-3d" }}
