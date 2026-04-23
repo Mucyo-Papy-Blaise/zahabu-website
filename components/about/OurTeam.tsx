@@ -32,8 +32,8 @@ const staff = [
 ];
 
 const teamImages = [
-  { image: "/Team1.jpeg", alt: "ZAHABU Team 1" },
-  { image: "/Team2.jpeg", alt: "ZAHABU Team 2" },
+  { image: "/team1.jpeg", alt: "ZAHABU Team 1" },
+  { image: "/team2.jpeg", alt: "ZAHABU Team 2" },
 ];
 
 export default function OurTeam() {
