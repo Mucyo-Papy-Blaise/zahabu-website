@@ -113,15 +113,69 @@ export default function OurTeam() {
       {/* Top row — 3 cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
         {staff.slice(0, 3).map((member, i) => (
-          <StaffCard key={i} member={member} index={i} />
+          <div key={i} className="flex flex-col items-center text-center">
+            {/* Circular photo with accent ring */}
+            <div className="relative w-44 h-44 mb-5">
+              <div className="absolute inset-0 rounded-full border-4 border-accent" />
+              <div className="absolute inset-1 rounded-full border-4 border-white z-10" />
+              <div className="absolute inset-2 rounded-full overflow-hidden z-20">
+                <Image
+                  src={member.image}
+                  alt={member.name}
+                  fill
+                  className="object-cover object-top"
+                />
+              </div>
+              <div className="absolute -bottom-1 -left-1 w-12 h-12 rounded-full border-4 border-accent z-0" />
+            </div>
+
+            <h3 className="text-primary font-bold text-sm uppercase tracking-wide leading-snug mb-1">
+              {member.name}
+            </h3>
+            <p className="text-accent text-sm font-black tracking-[0.2em] uppercase mb-4">
+              {member.role}
+            </p>
+            <div className="w-8 h-0.5 bg-accent rounded-full mb-4" />
+            {/* <p className="text-muted text-sm leading-relaxed text-center">
+              {member.bio}
+            </p> */}
+          </div>
         ))}
       </div>
 
       {/* Bottom row — 1 card centered */}
       <div className="flex justify-center mb-24">
-        <div className="w-full sm:w-1/2 lg:w-1/3">
-          <StaffCard member={staff[3]} index={3} />
-        </div>
+        {staff.slice(3).map((member, i) => (
+          <div
+            key={i}
+            className="flex flex-col items-center text-center max-w-sm"
+          >
+            <div className="relative w-44 h-44 mb-5">
+              <div className="absolute inset-0 rounded-full border-4 border-accent" />
+              <div className="absolute inset-1 rounded-full border-4 border-white z-10" />
+              <div className="absolute inset-2 rounded-full overflow-hidden z-20">
+                <Image
+                  src={member.image}
+                  alt={member.name}
+                  fill
+                  className="object-cover object-top"
+                />
+              </div>
+              <div className="absolute -bottom-1 -left-1 w-12 h-12 rounded-full border-4 border-accent z-0" />
+            </div>
+
+            <h3 className="text-primary font-bold text-sm uppercase tracking-wide leading-snug mb-1">
+              {member.name}
+            </h3>
+            <p className="text-accent text-sm font-black tracking-[0.2em] uppercase mb-4">
+              {member.role}
+            </p>
+            <div className="w-8 h-0.5 bg-accent rounded-full mb-4" />
+            <p className="text-muted text-sm leading-relaxed text-center">
+              {/* {member.bio} */}
+            </p>
+          </div>
+        ))}
       </div>
 
       {/* Team Photos Section */}
