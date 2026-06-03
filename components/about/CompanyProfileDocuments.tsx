@@ -23,6 +23,16 @@ const documents: Document[] = [
     category: "Regulatory",
     date: "April 2026",
     pages: 3,
+    file: "https://www.bnr.rw/documents/LIST_OF_LICENSED_INSURANCE_AND_REINSURANCE_BROKERS-April_2026.pdf",
+  },
+  {
+    id: "company-profile",
+    title: "Company Profile",
+    description:
+      "ZAHABU Insurance Brokers comprehensive company profile and corporate information.",
+    category: "Company",
+    date: "2026",
+    pages: 8,
     file: "/zahabu-profile.pdf",
   },
 ];
