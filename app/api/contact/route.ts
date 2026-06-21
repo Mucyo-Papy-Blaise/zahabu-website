@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import path from "node:path";
 
 type ContactPayload = {
   name: string;
@@ -14,11 +15,42 @@ const requiredEnvVars = [
   "SMTP_PASS",
 ] as const;
 
+const BRAND = {
+  name: "Zahabu Solutions",
+  primary: "#19144b",
+  accent: "#fabe0a",
+  background: "#F7F7F7",
+  muted: "#6b7280",
+  siteUrl:
+    process.env.NEXT_PUBLIC_SITE_URL?.trim() || "https://zahabusolutions.rw",
+};
+
+const LOGO_CID = "zahabu-logo";
+const LOGO_PATH = path.join(process.cwd(), "public", "logo.jpeg");
+
 function getMissingEnvVars() {
   return requiredEnvVars.filter((key) => !process.env[key]);
 }
 
-export function buildHtml({ name, email, phone, message}: ContactPayload) {
+function escapeHtml(value: string) {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function buildMailto(email: string) {
+  const subject = encodeURIComponent(`Re: Your enquiry to ${BRAND.name}`);
+  return `mailto:${encodeURIComponent(email)}?subject=${subject}`;
+}
+
+function cleanHeaderValue(value: string) {
+  return value.replace(/[\r\n]/g, " ").trim();
+}
+
+export function buildHtml({ name, email, phone, message }: ContactPayload) {
   const timestamp = new Date().toLocaleString("en-US", {
     weekday: "long",
     year: "numeric",
@@ -27,202 +59,125 @@ export function buildHtml({ name, email, phone, message}: ContactPayload) {
     hour: "2-digit",
     minute: "2-digit",
   });
- 
+
   const initials = name
     .split(" ")
-    .map((n) => n[0])
+    .map((part) => part[0])
     .join("")
     .toUpperCase()
     .slice(0, 2);
- 
-  const safeMessage = message.replace(/\n/g, "<br />");
- 
+
+  const siteUrl = BRAND.siteUrl.startsWith("http")
+    ? BRAND.siteUrl
+    : `https://${BRAND.siteUrl}`;
+  const safeName = escapeHtml(name);
+  const safeEmail = escapeHtml(email);
+  const safePhone = phone ? escapeHtml(phone) : "";
+  const safeTimestamp = escapeHtml(timestamp);
+  const safeMessage = escapeHtml(message).replace(/\n/g, "<br />");
+  const safeInitials = escapeHtml(initials);
+  const safeSiteUrl = escapeHtml(siteUrl);
+  const replyHref = escapeHtml(buildMailto(email));
+  const currentYear = new Date().getFullYear();
+
   return `
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>New Contact Form Submission</title>
+  <title>New Enquiry for ${BRAND.name}</title>
 </head>
-<body style="margin:0;padding:0;background:#f4f6f9;font-family:'Segoe UI',Arial,sans-serif;">
- 
-  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f6f9;padding:40px 16px;">
+<body style="margin:0;padding:0;background:${BRAND.background};font-family:Chillax,'Segoe UI',Arial,sans-serif;color:${BRAND.primary};">
+  <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background:${BRAND.background};padding:32px 16px;">
     <tr>
       <td align="center">
-        <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
- 
-          <!-- ─── Header / Brand ─────────────────────────────────── -->
+        <table width="560" cellpadding="0" cellspacing="0" role="presentation" style="max-width:560px;width:100%;">
           <tr>
-            <td style="background:#005f75;border-radius:16px 16px 0 0;padding:32px 40px;text-align:center;">
-              <table width="100%" cellpadding="0" cellspacing="0">
+            <td style="padding:0 0 28px;">
+              <table cellpadding="0" cellspacing="0" role="presentation">
                 <tr>
-                  <td>
-                    <!-- Logo mark -->
-                    <div style="display:inline-block;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);border-radius:12px;padding:10px 18px;margin-bottom:16px;">
-                      <span style="color:#ffffff;font-size:15px;font-weight:800;letter-spacing:0.1em;">ZAG RWANDA</span>
-                    </div>
-                    <p style="margin:0;color:rgba(255,255,255,0.55);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;font-weight:600;">
-                      Zebra Artworks Group
+                  <td style="width:34px;vertical-align:middle;">
+                    <img src="cid:${LOGO_CID}" width="34" height="34" alt="${BRAND.name}" style="display:block;width:34px;height:34px;border-radius:7px;object-fit:cover;border:1px solid #dedee6;" />
+                  </td>
+                  <td style="padding-left:8px;vertical-align:middle;">
+                    <p style="margin:0;color:${BRAND.primary};font-size:16px;font-weight:800;letter-spacing:0.02em;text-transform:uppercase;">${BRAND.name}</p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding:0 0 20px;">
+              <h1 style="margin:0;color:${BRAND.primary};font-size:32px;line-height:1.2;font-weight:800;letter-spacing:0;">New website enquiry</h1>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="background:#eeeeef;border-radius:8px;padding:24px 28px;">
+              <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
+                <tr>
+                  <td style="padding-bottom:8px;">
+                    <p style="margin:0;color:${BRAND.primary};font-size:13px;line-height:1.7;font-weight:700;">Date : ${safeTimestamp}</p>
+                    <p style="margin:0;color:${BRAND.primary};font-size:13px;line-height:1.7;font-weight:700;">Written by : ${safeName}</p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding:28px 0 0;">
+              <p style="margin:0 0 18px;color:${BRAND.primary};font-size:13px;line-height:1.7;">Dear ${BRAND.name} team,</p>
+              <p style="margin:0 0 18px;color:${BRAND.primary};font-size:13px;line-height:1.7;">${safeMessage}</p>
+              <p style="margin:0;color:${BRAND.primary};font-size:13px;line-height:1.7;">Regards,<br />${safeName}</p>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding:34px 0 16px;">
+              <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background:#ffffff;border:1px solid #dedee6;border-radius:8px;">
+                <tr>
+                  <td style="padding:20px 22px;width:48px;vertical-align:middle;">
+                    <div style="width:42px;height:42px;border-radius:50%;background:#fff1b8;border:1px solid #f7d95d;text-align:center;line-height:42px;color:${BRAND.primary};font-weight:800;font-size:14px;">${safeInitials}</div>
+                  </td>
+                  <td style="padding:20px 10px 20px 0;vertical-align:middle;">
+                    <p style="margin:0;color:${BRAND.primary};font-size:15px;font-weight:800;line-height:1.3;">${safeName}</p>
+                    <p style="margin:2px 0 0;color:${BRAND.muted};font-size:12px;line-height:1.5;">
+                      <a href="mailto:${safeEmail}" style="color:${BRAND.muted};text-decoration:none;">${safeEmail}</a>${safePhone ? ` &nbsp;|&nbsp; ${safePhone}` : " &nbsp;|&nbsp; Phone not provided"}
                     </p>
                   </td>
+                  <td align="right" style="padding:20px 22px 20px 8px;vertical-align:middle;">
+                    <a href="${replyHref}" style="display:inline-block;border:1px solid ${BRAND.primary};border-radius:6px;padding:10px 14px;color:${BRAND.primary};font-size:12px;font-weight:800;text-decoration:none;">Reply</a>
+                  </td>
                 </tr>
               </table>
             </td>
           </tr>
- 
-          <!-- ─── Alert Banner ───────────────────────────────────── -->
+
           <tr>
-            <td style="background:#004d60;padding:18px 40px;">
-              <table width="100%" cellpadding="0" cellspacing="0">
+            <td style="padding-top:8px;">
+              <table cellpadding="0" cellspacing="0" role="presentation">
                 <tr>
-                  <td>
-                    <table cellpadding="0" cellspacing="0">
-                      <tr>
-                        <td style="width:8px;background:#4ecdc4;border-radius:4px;margin-right:12px;">&nbsp;</td>
-                        <td style="padding-left:12px;">
-                          <p style="margin:0;color:#ffffff;font-size:16px;font-weight:700;letter-spacing:0.01em;">
-                            📬 New Contact Form Submission
-                          </p>
-                          <p style="margin:4px 0 0;color:rgba(255,255,255,0.45);font-size:11px;">
-                            ${timestamp}
-                          </p>
-                        </td>
-                      </tr>
-                    </table>
+                  <td style="width:20px;vertical-align:middle;color:#111827;font-size:22px;line-height:1;">&#8599;</td>
+                  <td style="padding-left:8px;vertical-align:middle;">
+                    <a href="${safeSiteUrl}" style="color:#111827;font-size:20px;font-weight:800;text-decoration:none;">Visit site</a>
                   </td>
                 </tr>
               </table>
             </td>
           </tr>
- 
-          <!-- ─── Body ───────────────────────────────────────────── -->
+
           <tr>
-            <td style="background:#ffffff;padding:36px 40px;">
- 
-              <!-- Sender avatar + name -->
-              <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;">
-                <tr>
-                  <td>
-                    <table cellpadding="0" cellspacing="0">
-                      <tr>
-                        <td>
-                          <div style="width:52px;height:52px;border-radius:14px;background:#e8f4f7;border:1.5px solid #b3d9e4;display:inline-flex;align-items:center;justify-content:center;text-align:center;line-height:52px;font-size:17px;font-weight:800;color:#005f75;vertical-align:middle;">
-                            ${initials}
-                          </div>
-                        </td>
-                        <td style="padding-left:14px;vertical-align:middle;">
-                          <p style="margin:0;font-size:17px;font-weight:700;color:#111827;">${name}</p>
-                          <p style="margin:3px 0 0;font-size:12px;color:#6b7280;">
-                            Submitted a new enquiry
-                          </p>
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-              </table>
- 
-              <!-- Divider -->
-              <div style="height:1px;background:#f0f2f5;margin-bottom:28px;"></div>
- 
-              <!-- Contact details grid -->
-              <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;">
-                <tr>
-                  <td style="padding-bottom:12px;">
-                    <table width="100%" cellpadding="0" cellspacing="0" style="background:#f8fafc;border:1px solid #e5e9ef;border-radius:12px;overflow:hidden;">
- 
-                      <!-- Email row -->
-                      <tr>
-                        <td style="padding:14px 18px;border-bottom:1px solid #e5e9ef;width:36px;vertical-align:top;">
-                          <div style="width:32px;height:32px;background:#e8f4f7;border-radius:8px;text-align:center;line-height:32px;font-size:15px;">
-                            ✉️
-                          </div>
-                        </td>
-                        <td style="padding:14px 18px 14px 0;border-bottom:1px solid #e5e9ef;vertical-align:top;">
-                          <p style="margin:0;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#9ca3af;">Email Address</p>
-                          <a href="mailto:${email}" style="color:#005f75;font-size:14px;font-weight:600;text-decoration:none;">${email}</a>
-                        </td>
-                      </tr>
- 
-                      <!-- Phone row -->
-                      <tr>
-                        <td style="padding:14px 18px;vertical-align:top;">
-                          <div style="width:32px;height:32px;background:#f0fdf4;border-radius:8px;text-align:center;line-height:32px;font-size:15px;">
-                            📞
-                          </div>
-                        </td>
-                        <td style="padding:14px 18px 14px 0;vertical-align:top;">
-                          <p style="margin:0;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#9ca3af;">Phone Number</p>
-                          <p style="margin:2px 0 0;font-size:14px;font-weight:600;color:#111827;">
-                            ${phone || '<span style="color:#9ca3af;font-style:italic;font-weight:400;">Not provided</span>'}
-                          </p>
-                        </td>
-                      </tr>
- 
-                    </table>
-                  </td>
-                </tr>
-              </table>
- 
-              <!-- Message block -->
-              <table width="100%" cellpadding="0" cellspacing="0">
-                <tr>
-                  <td>
-                    <p style="margin:0 0 10px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:#9ca3af;">
-                      Message
-                    </p>
-                    <div style="background:#f8fafc;border:1px solid #e5e9ef;border-left:3px solid #005f75;border-radius:0 12px 12px 0;padding:18px 20px;">
-                      <p style="margin:0;font-size:14px;color:#374151;line-height:1.75;">
-                        ${safeMessage}
-                      </p>
-                    </div>
-                  </td>
-                </tr>
-              </table>
- 
-              <!-- Divider -->
-              <div style="height:1px;background:#f0f2f5;margin:28px 0;"></div>
- 
-              <!-- Reply CTA -->
-              <table width="100%" cellpadding="0" cellspacing="0">
-                <tr>
-                  <td>
-                    <a
-                      href="mailto:${email}?subject=Re:%20Your%20Enquiry%20to%20ZAG%20Rwanda"
-                      style="display:inline-block;background:#005f75;color:#ffffff;font-size:13px;font-weight:700;text-decoration:none;padding:13px 28px;border-radius:100px;letter-spacing:0.02em;"
-                    >
-                      ↩&nbsp; Reply to ${name.split(" ")[0]}
-                    </a>
-                  </td>
-                </tr>
-              </table>
- 
+            <td style="padding:16px 0 0;text-align:center;">
+              <p style="margin:2px 0 0;color:#b7bac4;font-size:10px;line-height:1.6;">Copyright ${currentYear} ${BRAND.name}. All rights reserved.</p>
             </td>
           </tr>
- 
-          <!-- ─── Footer ──────────────────────────────────────────── -->
-          <tr>
-            <td style="background:#f8fafc;border:1px solid #e5e9ef;border-top:none;border-radius:0 0 16px 16px;padding:24px 40px;text-align:center;">
-              <p style="margin:0 0 6px;font-size:12px;font-weight:600;color:#005f75;letter-spacing:0.05em;">
-                ZEBRA ARTWORKS GROUP
-              </p>
-              <p style="margin:0 0 12px;font-size:11px;color:#9ca3af;">
-                Kigali, Rwanda &nbsp;·&nbsp; Architecture &nbsp;·&nbsp; Interior Design &nbsp;·&nbsp; Construction
-              </p>
-              <div style="width:32px;height:2px;background:#005f75;border-radius:2px;margin:0 auto 12px;"></div>
-              <p style="margin:0;font-size:10px;color:#d1d5db;">
-                This email was automatically generated from the contact form on your website.
-                Do not reply to this automated message — use the button above to respond directly.
-              </p>
-            </td>
-          </tr>
- 
         </table>
       </td>
     </tr>
   </table>
- 
 </body>
 </html>
   `.trim();
@@ -270,26 +225,33 @@ export async function POST(request: Request) {
   }
 
   const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: smtpPort,
-    secure: smtpPort === 465,
-    auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS,
-    },
-  });
+  host: process.env.SMTP_HOST,
+  port: smtpPort,
+  secure: smtpPort === 465,
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
+  },
+});
 
   const recipient = process.env.CONTACT_TO_EMAIL || process.env.SMTP_USER;
-  const from = process.env.CONTACT_FROM_EMAIL || process.env.SMTP_USER;
+  const fromAddress =
+    process.env.CONTACT_FROM_EMAIL || process.env.SMTP_USER || "";
+  const fromName = cleanHeaderValue(
+    process.env.MAIL_FROM_NAME || "ZAHABU-SOLUTION",
+  );
 
   try {
     await transporter.sendMail({
       to: recipient,
-      from,
+      from: {
+        name: fromName,
+        address: fromAddress,
+      },
       replyTo: email,
       subject: `Website Enquiry from ${name}`,
       text: [
-        "Hello ZAHABU Solutions,",
+        "Hello Zahabu Solutions,",
         "",
         `Name: ${name}`,
         `Email: ${email}`,
@@ -299,6 +261,13 @@ export async function POST(request: Request) {
         message,
       ].join("\n"),
       html: buildHtml({ name, email, phone, message }),
+      attachments: [
+        {
+          filename: "logo.jpeg",
+          path: LOGO_PATH,
+          cid: LOGO_CID,
+        },
+      ],
     });
   } catch (error) {
     console.error("Failed to send contact email:", error);
